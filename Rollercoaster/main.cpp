@@ -13,7 +13,6 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <glimac/model.hpp>
-#include <glimac/mesh.hpp>
 #include <glimac/spline.hpp>
 
 
