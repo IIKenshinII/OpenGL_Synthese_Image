@@ -55,7 +55,11 @@ private:
             return;
         }
         // retrieve the directory path of the filepath
-        directory = path.substr(0, path.find_last_of('\\'));
+        #if defined(_WIN32)
+            directory = path.substr(0, path.find_last_of('\\'));
+        #elif defined(__linux__)
+            directory = path.substr(0, path.find_last_of('/'));
+        #endif
         std::cout << directory<<std::endl ;
 
         // process ASSIMP's root node recursively
