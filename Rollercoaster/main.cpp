@@ -206,6 +206,7 @@ static void size_callback(GLFWwindow* /*window*/, int /* width*/, int /* height*
 
 int main(int argc, char** argv)
 {
+    argc = argc+ argc - argc;
     /* Initialize the library */
     if (!glfwInit()) {
         return -1;
@@ -259,7 +260,7 @@ int main(int argc, char** argv)
      GLuint mvpmerry = glGetUniformLocation(program2.getGLId(), "uMVPMatrix");
    GLuint mvmerry = glGetUniformLocation(program2.getGLId(), "uMVMatrix");
    GLuint nmmerry = glGetUniformLocation(program2.getGLId(), "uNormalMatrix");
-   GLuint texmerry = glGetUniformLocation(program2.getGLId(), "texture_diffuse1");
+
 
     glimac::Program                program3 = loadProgram(applicationPath.dirPath() + "/Rollercoaster/shaders/6.2.skybox.vs.glsl",
         applicationPath.dirPath() + "/Rollercoaster/shaders/6.2.skybox.fs.glsl");
@@ -310,7 +311,7 @@ int main(int argc, char** argv)
     ProjMatrix = glm::perspective(glm::radians(70.f), (GLfloat)window_width / (GLfloat)window_height, 0.1f, 100.f);
     glEnable(GL_DEPTH_TEST);
     float time=0.f;
-    bool  c = true;
+
     std::vector<glm::vec3> pos;
     for (int i = 0; i < 32; i++) {
 
@@ -323,7 +324,7 @@ int main(int argc, char** argv)
     spline.insert(spline.end(), spline2.begin(), spline2.end());
 
     
-    int j = 0;
+    long unsigned int j = 0;
     float elapsedTime = 0.0f;
     float lasttime = 0.f;
     splineObj.drawSquares2D(spline, 0.1f);
@@ -384,7 +385,7 @@ int main(int argc, char** argv)
         splineObj.renderSpline(viewMatrix, ProjMatrix, mvp, mv, nm, kd, ks, lint, ldir, shin);
         MVMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));              
         MVMatrix = glm::scale(MVMatrix, glm::vec3(0.2, 0.2, 0.2));
-        glm::mat4 MVMatrix2 = MVMatrix;
+
         MVMatrix = glm::rotate(MVMatrix, glm::radians(-90.f), glm::vec3(1, 0, 0));
         MVMatrix = glm::rotate(MVMatrix, glm::radians(-90.f), glm::vec3(0, 0, 1));
         

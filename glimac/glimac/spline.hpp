@@ -87,7 +87,7 @@ public:
         PosNorm pos, pos2, pos3, pos4;
 
 
-        for (auto i = 0; i < centers.size() - 1; i++) {
+        for (long unsigned int i = 0; i < centers.size() - 1; i++) {
             glm::vec3 center = centers[i];
             glm::vec3 center2 = centers[i + 1];
             p1 = center + glm::vec3(halfSize, -halfSize, 0);
