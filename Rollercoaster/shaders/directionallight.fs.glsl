@@ -23,5 +23,5 @@ vec3 blinnPhong()
 
 void main()
 {
-    fFragColor =vec3(0.69,0.88,0.9);//blinnPhong();
+    fFragColor =vec3(0.69,0.88,0.9)+blinnPhong();
 }

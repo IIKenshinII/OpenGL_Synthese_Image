@@ -181,14 +181,13 @@ std::vector<glm::vec3> generateSpline(std::vector<glm::vec3> &controlPoints) {
     return splinePoints;
 }
 
-
-struct result { std::vector<glm::vec3> vec; std::vector<uint32_t> indexes; };
+struct PosNorm { glm::vec3 pos; glm::vec3 norm; };
+struct result { std::vector<PosNorm> vec; std::vector<uint32_t> indexes;  };
 result drawSquares2D(std::vector<glm::vec3> centers, float s) {
     float halfSize = s / 2.0f;
-    std::vector<glm::vec3> squares;
-    std::vector<uint32_t> indexes;
+    result res;
     glm::vec3 p1, p2, p3, p4;
-
+    PosNorm pos,pos2,pos3,pos4;
 
 
     for (auto i = 0; i < centers.size() - 1; i++) {
@@ -200,29 +199,36 @@ result drawSquares2D(std::vector<glm::vec3> centers, float s) {
         p3 = center2 + glm::vec3(halfSize, -halfSize, 0);
         p4 = center2 + glm::vec3(-halfSize, -halfSize, 0);
 
-        squares.push_back(p1);
-        squares.push_back(p2);
-        squares.push_back(p3);
-        squares.push_back(p4);
+        pos.pos=p1;
+        pos.norm=glm::normalize(p1);
+        res.vec.push_back(pos);
+        pos2.pos = p2;
+        pos2.norm = glm::normalize(p2);
+        res.vec.push_back(pos2);
+        pos3.pos = p3;
+        pos3.norm = glm::normalize(p3);
+        res.vec.push_back(pos3);
+        pos4.pos = p4;
+        pos4.norm = glm::normalize(p4);
+        res.vec.push_back(pos4);
+       
 
-        indexes.push_back(i*4+ 0);
-        indexes.push_back(i*4 + 1);
-        indexes.push_back(i*4 + 2);
-        indexes.push_back(i*4 + 2);
-        indexes.push_back(i*4 + 3);
-        indexes.push_back(i*4 + 1);
+        res.indexes.push_back(i*4+ 0);
+        res.indexes.push_back(i*4 + 1);
+        res.indexes.push_back(i*4 + 2);
+        res.indexes.push_back(i*4 + 2);
+        res.indexes.push_back(i*4 + 3);
+        res.indexes.push_back(i*4 + 1);
            
     }
 
-      
-    result res{ squares,indexes };
 
     return res;
 }
 
 
 void renderSpline(GLFWwindow* window, glm::mat4 viewMatrix,glm::mat4 ProjMatrix,GLuint mvp, GLuint mv, GLuint nm,
-    GLuint kd, GLuint ks, GLuint lint, GLuint ldir, GLuint shin,std::vector<glm::vec3> trail, std::vector<uint32_t>indexes)
+    GLuint kd, GLuint ks, GLuint lint, GLuint ldir, GLuint shin,result spline)
 {
 
     
@@ -230,14 +236,14 @@ void renderSpline(GLFWwindow* window, glm::mat4 viewMatrix,glm::mat4 ProjMatrix,
     GLuint vbo, ibo;
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, trail.size() * sizeof(glm::vec3), trail.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, spline.vec.size() * sizeof(PosNorm), spline.vec.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     glGenBuffers(1, &ibo);
 
     //// => On bind sur GL_ELEMENT_ARRAY_BUFFER, cible reservée pour les IBOs
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexes.size() * sizeof(uint32_t), indexes.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, spline.indexes.size() * sizeof(uint32_t), spline.indexes.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     
     GLuint vao;
@@ -250,7 +256,10 @@ void renderSpline(GLFWwindow* window, glm::mat4 viewMatrix,glm::mat4 ProjMatrix,
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glVertexAttribPointer(0,
         3, GL_FLOAT, GL_FALSE,
-        sizeof(GLfloat)*3, (const GLvoid*)0);
+        sizeof(PosNorm), (const GLvoid*)offsetof(PosNorm, pos));
+    glVertexAttribPointer(1,
+        3, GL_FLOAT, GL_FALSE,
+        sizeof(PosNorm), (const GLvoid*)offsetof(PosNorm,norm));
     
 
 
@@ -279,7 +288,7 @@ void renderSpline(GLFWwindow* window, glm::mat4 viewMatrix,glm::mat4 ProjMatrix,
 
     //glDrawArrays(GL_TRIANGLES, 0, (int)trail.size());
 
-    glDrawElements(GL_TRIANGLES,(GLsizei) indexes.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES,(GLsizei) spline.indexes.size(), GL_UNSIGNED_INT, 0);
 
     glDeleteBuffers(1, &vbo);
     glDeleteVertexArrays(1, &vao);
@@ -475,8 +484,9 @@ int main(int argc, char** argv)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glm::mat4 viewMatrix = camera.getViewMatrix();
 
-    glm::mat4 MVPMoon, MVMoon, NormalMoon;
+    glm::mat4 MVPMoon, MVMoon, NormalMoon, MVPgrass, MVgrass, Normalgrass;
     Model md(applicationPath.dirPath() + "Rollercoaster/assets/textures/merry.obj");
+    Model mdgrass(applicationPath.dirPath() + "Rollercoaster/assets/textures/grass.obj");
 
     while (!glfwWindowShouldClose(window)) {
 
@@ -485,7 +495,7 @@ int main(int argc, char** argv)
         elapsedTime += abs(time - lasttime);
         if (j >= spline.size())j = 0;
         int numSplinePoints =(int) spline.size();
-        int index = (int)(elapsedTime * 35.f) % numSplinePoints;
+        int index = (int)(elapsedTime * 80.f) % numSplinePoints;
         glm::vec3 splinePos = spline[index];
         
 
@@ -513,7 +523,7 @@ int main(int argc, char** argv)
 
 
         program.use();
-        renderSpline(window, viewMatrix, ProjMatrix, mvp, mv, nm, kd, ks, lint, ldir, shin,res.vec,res.indexes);
+        renderSpline(window, viewMatrix, ProjMatrix, mvp, mv, nm, kd, ks, lint, ldir, shin,res);
         MVMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));              //position my sphere
         MVMatrix = glm::scale(MVMatrix, glm::vec3(0.2, 0.2, 0.2));
         glm::mat4 MVMatrix2 = MVMatrix;
@@ -558,12 +568,20 @@ int main(int argc, char** argv)
         glBindTexture(GL_TEXTURE_2D, 0);
         glBindVertexArray(0);
        program2.use();
-        glm::mat4 mc = viewMatrix * MVMatrix2;
         glUniformMatrix4fv(mvpmerry, 1, GL_FALSE, glm::value_ptr(MVPMatrix));
         glUniformMatrix4fv(mvmerry, 1, GL_FALSE, glm::value_ptr(MVMatrix));
         glUniformMatrix4fv(nmmerry, 1, GL_FALSE, glm::value_ptr(NormalMatrix));
         md.Draw(program2);
        
+        MVgrass = glm::translate(glm::mat4(1.0f), glm::vec3(0, -0.011, 0));
+        MVgrass = glm::scale(MVgrass, glm::vec3(0.001, 0.001, 0.001));
+        MVgrass= viewMatrix * MVgrass;
+        MVPgrass= ProjMatrix * MVgrass;
+        Normalgrass = glm::transpose(glm::inverse(MVgrass));
+        glUniformMatrix4fv(mvpmerry, 1, GL_FALSE, glm::value_ptr(MVPgrass));
+        glUniformMatrix4fv(mvmerry, 1, GL_FALSE, glm::value_ptr(MVgrass));
+        glUniformMatrix4fv(nmmerry, 1, GL_FALSE, glm::value_ptr(Normalgrass));
+        mdgrass.Draw(program2);
        
 
        

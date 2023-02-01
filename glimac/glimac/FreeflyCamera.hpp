@@ -19,7 +19,7 @@ private:
 
 public:
     FreeflyCamera()
-        : m_Position(0.1, 0.1, 0.3), m_fPhi(glm::pi<float>()), m_fTheta(0.f)
+        : m_Position(0.1, 0.1, 0.5), m_fPhi(glm::pi<float>()), m_fTheta(0.f)
     {
         computeDirectionVectors();
     }
