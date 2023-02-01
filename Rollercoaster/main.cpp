@@ -155,7 +155,7 @@ FreeflyCamera camera = FreeflyCamera();
 
 
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void key_callback(GLFWwindow* /*window*/, int key, int /*scancode*/, int action, int /*mods*/)
 {
     // Move forward
     if (key == GLFW_KEY_W && action != GLFW_RELEASE) {
@@ -173,13 +173,13 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     if (key == GLFW_KEY_D && action != GLFW_RELEASE) {
         camera.moveLeft(-0.1f);
     }
-};
+}
 
-static void mouse_button_callback(GLFWwindow* /*window*/, int /* button*/, int /* action*/, int /* mods*/){};
+static void mouse_button_callback(GLFWwindow* /*window*/, int /* button*/, int /* action*/, int /* mods*/){}
 
 static void scroll_callback(GLFWwindow* /* window*/, double /* xoffset*/, double /* yoffset*/){
 
-};
+}
 
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
@@ -198,11 +198,11 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
         camera.rotateLeft((float)xoffset / 5);
         camera.rotateUp((float)yoffset / 5);
     }
-};
+}
 
 static void size_callback(GLFWwindow* /*window*/, int /* width*/, int /* height*/){
 
-};
+}
 
 int main(int argc, char** argv)
 {
@@ -381,7 +381,7 @@ int main(int argc, char** argv)
 
 
         program.use();
-        splineObj.renderSpline(window, viewMatrix, ProjMatrix, mvp, mv, nm, kd, ks, lint, ldir, shin);
+        splineObj.renderSpline(viewMatrix, ProjMatrix, mvp, mv, nm, kd, ks, lint, ldir, shin);
         MVMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));              
         MVMatrix = glm::scale(MVMatrix, glm::vec3(0.2, 0.2, 0.2));
         glm::mat4 MVMatrix2 = MVMatrix;

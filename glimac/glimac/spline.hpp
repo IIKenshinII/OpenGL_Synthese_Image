@@ -123,7 +123,7 @@ public:
     }
 
 
-    void renderSpline(GLFWwindow* window, glm::mat4 viewMatrix, glm::mat4 ProjMatrix, GLuint mvp, GLuint mv, GLuint nm,
+    void renderSpline(glm::mat4 viewMatrix, glm::mat4 ProjMatrix, GLuint mvp, GLuint mv, GLuint nm,
         GLuint kd, GLuint ks, GLuint lint, GLuint ldir, GLuint shin)
     {
 
