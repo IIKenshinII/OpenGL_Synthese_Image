@@ -18,6 +18,7 @@ public:
         sh = psh;
       
     }
+    // take a set of control points to generate a spline
     std::vector<glm::vec3> generateSpline(std::vector<glm::vec3>& controlPoints) {
         std::vector<glm::vec3> splinePoints;
         int numControlPoints = (int)controlPoints.size();
