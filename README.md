@@ -2,4 +2,4 @@
 
 ## Team Members
 - Amine HEDJAR(IIKenshinII & lKenshinl)
-- Arthut MBUYI-MUZUNGU
+- Arthur MBUYI-MUZUNGU
