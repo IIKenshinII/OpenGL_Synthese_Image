@@ -23,7 +23,7 @@ float         prevxpos;
 float         prevypos;
 bool          previous = true;
 
-glm::vec3 li(1, 1, 1);
+glm::vec3 li(0.7, 0.7, 0.7);
 glm::vec3 ukd(0.31, 0.7, 0.97);
 glm::vec3 uks(0.5, 0.5, 0.5);
 float     sh = 200;
