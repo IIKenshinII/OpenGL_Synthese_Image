@@ -1,9 +1,8 @@
 
 struct MoonProgram {
     glimac::Program m_Program;
-    GLint           mvp,tex,kd,ks,shin,ldir,lint;
-    GLint           mv;
-    GLint           nm;
+    GLint           mvp, tex, kd, ks, shin;
+    GLint           mv, nm, ldir, lint;
     std::unique_ptr<glimac::Image> luneImg;
     GLuint vao, vbo;
     GLuint texture_map;
