@@ -273,6 +273,18 @@ int main(int argc, char** argv)
     GLuint skybox = glGetUniformLocation(program3.getGLId(), "skybox");
 
 
+    glimac::Program                programCube = loadProgram(applicationPath.dirPath() + "/Rollercoaster/shaders/merry.vs.glsl",
+        applicationPath.dirPath() + "/Rollercoaster/shaders/cubelight.fs.glsl");
+    GLuint mvpcube = glGetUniformLocation(programCube.getGLId(), "uMVPMatrix");
+    GLuint mvcube = glGetUniformLocation(programCube.getGLId(), "uMVMatrix");
+    GLuint nmcube = glGetUniformLocation(programCube.getGLId(), "uNormalMatrix");
+    GLuint kdcube = glGetUniformLocation(programCube.getGLId(), "uKd");
+    GLuint kscube = glGetUniformLocation(programCube.getGLId(), "uKs");
+    GLuint shincube = glGetUniformLocation(programCube.getGLId(), "uShininess");
+    GLuint lposecube = glGetUniformLocation(programCube.getGLId(), "uLightPos_vs");
+    GLuint lintcube = glGetUniformLocation(programCube.getGLId(), "uLightIntensity");
+
+
   
     std::vector<std::string> faces
     {
@@ -346,7 +358,7 @@ int main(int argc, char** argv)
     glm::mat4  MVPgrass, MVgrass, Normalgrass;
     Model md(applicationPath.dirPath() + "Rollercoaster/assets/textures/merry.obj");
     Model mdgrass(applicationPath.dirPath() + "Rollercoaster/assets/textures/grass.obj");
-
+    Model mdcube(applicationPath.dirPath() + "Rollercoaster/assets/textures/frozencube.obj");
     while (!glfwWindowShouldClose(window)) {
 
         time                 = (float)glfwGetTime();
@@ -423,6 +435,25 @@ int main(int argc, char** argv)
         glUniformMatrix4fv(nmmerry, 1, GL_FALSE, glm::value_ptr(Normalgrass));
         mdgrass.Draw(program2);
        
+        programCube.use();
+        glm::vec3 cubeposition = glm::vec3(0.3, 0.1, -0.1);
+        MVMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.3, 0.1, -0.1));
+        glm::vec3 lumpos =glm::vec3(viewMatrix* glm::vec4(0.3, cubeposition.y-0.02, -0.1,1));
+        MVMatrix = glm::scale(MVMatrix, glm::vec3(0.01, 0.01, 0.01));
+
+        MVMatrix = viewMatrix * MVMatrix;
+        NormalMatrix = glm::transpose(glm::inverse(MVMatrix));
+      
+        MVPMatrix = ProjMatrix * MVMatrix;
+        glUniformMatrix4fv(mvpcube, 1, GL_FALSE, glm::value_ptr(MVPMatrix));
+        glUniformMatrix4fv(mvcube, 1, GL_FALSE, glm::value_ptr(MVMatrix));
+        glUniformMatrix4fv(nmcube, 1, GL_FALSE, glm::value_ptr(NormalMatrix));
+        glUniform3fv(kdcube, 1, glm::value_ptr(ukd));
+        glUniform3fv(kscube, 1, glm::value_ptr(uks));
+        glUniform3fv(lintcube, 1, glm::value_ptr(li));
+        glUniform3fv(lposecube, 1, glm::value_ptr(lumpos));
+        glUniform1f(shincube, sh);
+        mdcube.Draw(programCube);
 
 
         /* Swap front and back buffers */
