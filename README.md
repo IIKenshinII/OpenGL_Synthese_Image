@@ -1,8 +1,8 @@
 # Rollercoaster project using OpenGL
 
 ## Team Members
-- Amine HEDJAR(IIKenshinII & lKenshinl)
-- Arthur MBUYI-MUZUNGU(LeYonko)
+- Amine HEDJAR (IIKenshinII & lKenshinl)
+- Arthur MBUYI-MUZUNGU (LeYonko)
 
 ## Keys for movements
 - forward: z touch
