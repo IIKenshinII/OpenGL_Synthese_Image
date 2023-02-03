@@ -5,32 +5,33 @@
 
 namespace glimac {
     
-// Représente un cone ouvert discrétisé dont la base est centrée en (0, 0, 0) (dans son repère local)
-// Son axe vertical est (0, 1, 0) et ses axes transversaux sont (1, 0, 0) et (0, 0, 1)
+// Represents a discretized open cone whose base is centered at (0, 0, 0) (in its local coordinate system)
+// Its vertical axis is (0, 1, 0) and its transverse axes are (1, 0, 0) and (0, 0, 1)
 class Cone {
-    // Alloue et construit les données (implantation dans le .cpp)
+    // Allocates and builds the data (implementation in the .cpp)
     void build(GLfloat height, GLfloat radius, GLsizei discLat, GLsizei discHeight);
 
 public:
-    // Constructeur: alloue le tableau de données et construit les attributs des vertex
+    // Constructor: allocate data array and build vertex attributes
+
     Cone(GLfloat height, GLfloat radius, GLsizei discLat, GLsizei discHeight):
         m_nVertexCount(0) {
-        build(height, radius, discLat, discHeight); // Construction (voir le .cpp)
+        build(height, radius, discLat, discHeight); // build (see .cpp)
     }
 
-    // Renvoit le pointeur vers les données
+    // Returns the pointer to the data
     const ShapeVertex* getDataPointer() const {
         return &m_Vertices[0];
     }
     
-    // Renvoit le nombre de vertex
+    // Returns the number of vertices
     GLsizei getVertexCount() const {
         return m_nVertexCount;
     }
 
 private:
     std::vector<ShapeVertex> m_Vertices;
-    GLsizei m_nVertexCount; // Nombre de sommets
+    GLsizei m_nVertexCount; // number of vertices
 };
     
 }

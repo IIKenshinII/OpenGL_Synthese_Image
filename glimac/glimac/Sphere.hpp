@@ -6,34 +6,34 @@
 
 namespace glimac {
 
-// Représente une sphère discrétisée centrée en (0, 0, 0) (dans son repère local)
-// Son axe vertical est (0, 1, 0) et ses axes transversaux sont (1, 0, 0) et (0, 0, 1)
+// Represents a discretized sphere centered at (0, 0, 0) (in its local coordinate system)
+// Its vertical axis is (0, 1, 0) and its transverse axes are (1, 0, 0) and (0, 0, 1)
 class Sphere {
-    // Alloue et construit les données (implantation dans le .cpp)
+    // Allocates and builds the data (implementation in the .cpp)
     void build(GLfloat radius, GLsizei discLat, GLsizei discLong);
 
 public:
-    // Constructeur: alloue le tableau de données et construit les attributs des vertex
+    // Constructor: allocate data array and build vertex attributes
     Sphere(GLfloat radius, GLsizei discLat, GLsizei discLong):
         m_nVertexCount(0) {
-        build(radius, discLat, discLong); // Construction (voir le .cpp)
+        build(radius, discLat, discLong); // build (see .cpp)
     }
 
 
 
-    // Renvoit le pointeur vers les données
+    // Returns the pointer to the data
     const ShapeVertex* getDataPointer() const {
         return &m_Vertices[0];
     }
     
-    // Renvoit le nombre de vertex
+    // Returns the number of vertices
     GLsizei getVertexCount() const {
         return m_nVertexCount;
     }
 
 private:
     std::vector<ShapeVertex> m_Vertices;
-    GLsizei m_nVertexCount; // Nombre de sommets
+    GLsizei m_nVertexCount; // number of vertices
 };
     
 }

@@ -60,7 +60,7 @@ public:
 
         glGenBuffers(1, &ibo);
 
-        //// => On bind sur GL_ELEMENT_ARRAY_BUFFER, cible reservée pour les IBOs
+        //// => We bind on GL_ELEMENT_ARRAY_BUFFER, target reserved for IBOs
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, spline.indexes.size() * sizeof(uint32_t), spline.indexes.data(), GL_STATIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
